@@ -18,7 +18,8 @@ public class CorsConfig {
         configuration.setAllowedOrigins(
                 List.of(
                         "http://localhost:5173",
-                        "http://localhost"
+                        "http://localhost",
+                        "http://18.61.32.216"
                 )
         );
 

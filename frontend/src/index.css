@@ -4701,9 +4701,7 @@ select:focus-visible {
     }
 
     .conversation-item {
-        padding:
-            12px;
-            13px;
+        padding: 12px 13px;
     }
 
     .conversation-item.active::before {

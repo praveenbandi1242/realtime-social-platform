@@ -18,17 +18,29 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
+
+    const [token, setToken] = useState(
+        () => localStorage.getItem("accessToken")
+    );
+
     const [loading, setLoading] = useState(true);
+
+
+    /* =====================================================
+       INITIALIZE AUTH
+    ===================================================== */
 
     useEffect(() => {
 
         const initializeAuth = async () => {
 
-            const token =
+            const accessToken =
                 localStorage.getItem("accessToken");
 
-            if (!token) {
+            if (!accessToken) {
+
                 setLoading(false);
+
                 return;
             }
 
@@ -39,10 +51,21 @@ export const AuthProvider = ({ children }) => {
 
                 setUser(currentUser);
 
+                setToken(accessToken);
+
             } catch {
 
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
+                localStorage.removeItem(
+                    "accessToken"
+                );
+
+                localStorage.removeItem(
+                    "refreshToken"
+                );
+
+                setToken(null);
+
+                setUser(null);
 
             } finally {
 
@@ -54,10 +77,16 @@ export const AuthProvider = ({ children }) => {
 
     }, []);
 
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
+
     const login = async (credentials) => {
 
         const response =
             await loginApi(credentials);
+
 
         localStorage.setItem(
             "accessToken",
@@ -69,14 +98,27 @@ export const AuthProvider = ({ children }) => {
             response.refreshToken
         );
 
-        setUser(response.user);
+
+        setToken(
+            response.accessToken
+        );
+
+        setUser(
+            response.user
+        );
     };
+
+
+    /* =====================================================
+       REGISTER
+    ===================================================== */
 
     const register = async (data) => {
 
         const response =
             await registerApi(data);
 
+
         localStorage.setItem(
             "accessToken",
             response.accessToken
@@ -87,32 +129,62 @@ export const AuthProvider = ({ children }) => {
             response.refreshToken
         );
 
-        setUser(response.user);
+
+        setToken(
+            response.accessToken
+        );
+
+        setUser(
+            response.user
+        );
     };
+
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
 
     const logout = async () => {
 
         const refreshToken =
             localStorage.getItem("refreshToken");
 
+
         if (refreshToken) {
+
             try {
-                await logoutApi(refreshToken);
+
+                await logoutApi(
+                    refreshToken
+                );
+
             } catch {
+
                 // Continue local logout.
             }
         }
 
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+
+        localStorage.removeItem(
+            "accessToken"
+        );
+
+        localStorage.removeItem(
+            "refreshToken"
+        );
+
+
+        setToken(null);
 
         setUser(null);
     };
+
 
     return (
         <AuthContext.Provider
             value={{
                 user,
+                token,
                 loading,
                 login,
                 register,
@@ -124,4 +196,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+
+export const useAuth = () =>
+    useContext(AuthContext);

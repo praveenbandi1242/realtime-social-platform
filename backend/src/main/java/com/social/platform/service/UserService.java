@@ -4,12 +4,12 @@ import com.social.platform.dto.user.*;
 import com.social.platform.entity.User;
 import com.social.platform.exception.BadRequestException;
 import com.social.platform.exception.ResourceNotFoundException;
-
 import com.social.platform.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,27 @@ public class UserService {
     public UserResponse getCurrentUser(String email) {
 
         User user = findByEmail(email);
+
+        return toResponse(user);
+    }
+
+    /*
+     * Get a user's profile by ID.
+     *
+     * This is used when:
+     *
+     * Search
+     *   ↓
+     * click user
+     *   ↓
+     * /users/{id}
+     *   ↓
+     * GET /api/users/{id}
+     */
+    @Transactional(readOnly = true)
+    public UserResponse getUserById(Long userId) {
+
+        User user = findById(userId);
 
         return toResponse(user);
     }

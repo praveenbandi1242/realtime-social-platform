@@ -1,27 +1,34 @@
 import {
     BrowserRouter,
     Routes,
-    Route
+    Route,
 } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
-
 import ProtectedRoute from "./components/ProtectedRoute";
+
+import AppLayout from "./components/layout/AppLayout";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
 import Profile from "./pages/Profile";
 import UserSearch from "./pages/UserSearch";
+import NotificationsPage from "./pages/NotificationsPage";
+import UserProfile from "./pages/UserProfile";
+import Connections from "./pages/Connections";
+import Messages from "./pages/Messages";
 
 const App = () => {
-
     return (
         <BrowserRouter>
-
             <AuthProvider>
 
                 <Routes>
+
+                    {/* =========================
+                        PUBLIC ROUTES
+                    ========================= */}
 
                     <Route
                         path="/login"
@@ -33,29 +40,62 @@ const App = () => {
                         element={<Register />}
                     />
 
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <Home />
-                            </ProtectedRoute>
-                        }
-                    />
+
+                    {/* =========================
+                        NORMAL APPLICATION
+                        WITH SIDEBAR
+                    ========================= */}
 
                     <Route
-                        path="/profile"
                         element={
                             <ProtectedRoute>
-                                <Profile />
+                                <AppLayout />
                             </ProtectedRoute>
                         }
-                    />
+                    >
+
+                        <Route
+                            path="/"
+                            element={<HomePage />}
+                        />
+
+                        <Route
+                            path="/profile"
+                            element={<Profile />}
+                        />
+
+                        <Route
+                            path="/users/:userId"
+                            element={<UserProfile />}
+                        />
+
+                        <Route
+                            path="/connections"
+                            element={<Connections />}
+                        />
+
+                        <Route
+                            path="/search"
+                            element={<UserSearch />}
+                        />
+
+                        <Route
+                            path="/notifications"
+                            element={<NotificationsPage />}
+                        />
+
+                    </Route>
+
+
+                    {/* =========================
+                        FULL-SCREEN MESSAGES
+                    ========================= */}
 
                     <Route
-                        path="/search"
+                        path="/messages"
                         element={
                             <ProtectedRoute>
-                                <UserSearch />
+                                <Messages />
                             </ProtectedRoute>
                         }
                     />
@@ -63,7 +103,6 @@ const App = () => {
                 </Routes>
 
             </AuthProvider>
-
         </BrowserRouter>
     );
 };

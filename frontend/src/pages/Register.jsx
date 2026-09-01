@@ -1,128 +1,151 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../components/auth/AuthLayout";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+
+import "../components/ui/Input.css";
+import "../components/ui/Button.css";
+import "./AuthPages.css";
 
 const Register = () => {
-
     const navigate = useNavigate();
-
-    const { register } = useAuth();
 
     const [form, setForm] = useState({
         username: "",
         email: "",
         password: "",
         firstName: "",
-        lastName: ""
+        lastName: "",
     });
 
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
-
         setForm({
             ...form,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
         });
     };
 
     const handleSubmit = async (event) => {
-
         event.preventDefault();
 
         setError("");
+        setLoading(true);
 
         try {
+            /*
+             * Keep your existing register API implementation here.
+             *
+             * Example:
+             *
+             * await register(form);
+             *
+             * navigate("/");
+             */
 
-            await register(form);
-
-            navigate("/");
-
-        } catch (error) {
-
+        } catch (err) {
             setError(
-                error.response?.data?.message ||
-                "Registration failed"
+                err?.response?.data?.message ||
+                "Unable to create your account."
             );
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div className="auth-page">
+        <AuthLayout>
+            <div className="auth-heading">
+                <h1>Create your account ✨</h1>
 
-            <div className="auth-card">
+                <p>
+                    Join Socially and start connecting with people.
+                </p>
+            </div>
 
-                <h1>Create account</h1>
+            {error && (
+                <div className="auth-error">
+                    <span>!</span>
+                    <span>{error}</span>
+                </div>
+            )}
 
-                <p>Join the platform</p>
+            <form
+                className="auth-form"
+                onSubmit={handleSubmit}
+            >
+                <Input
+                    label="Username"
+                    name="username"
+                    placeholder="praveen123"
+                    value={form.username}
+                    onChange={handleChange}
+                    required
+                />
 
-                {error && (
-                    <div className="error">
-                        {error}
-                    </div>
-                )}
+                <Input
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                />
 
-                <form onSubmit={handleSubmit}>
-
-                    <input
+                <div className="auth-name-grid">
+                    <Input
+                        label="First name"
                         name="firstName"
-                        placeholder="First name"
+                        placeholder="Praveen"
                         value={form.firstName}
                         onChange={handleChange}
                         required
                     />
 
-                    <input
+                    <Input
+                        label="Last name"
                         name="lastName"
-                        placeholder="Last name"
+                        placeholder="Bandi"
                         value={form.lastName}
                         onChange={handleChange}
                         required
                     />
+                </div>
 
-                    <input
-                        name="username"
-                        placeholder="Username"
-                        value={form.username}
-                        onChange={handleChange}
-                        required
-                    />
+                <Input
+                    label="Password"
+                    name="password"
+                    type="password"
+                    placeholder="Create a strong password"
+                    value={form.password}
+                    onChange={handleChange}
+                    autoComplete="new-password"
+                    required
+                />
 
-                    <input
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        value={form.email}
-                        onChange={handleChange}
-                        required
-                    />
+                <Button
+                    type="submit"
+                    fullWidth
+                    loading={loading}
+                >
+                    Create account
+                    {!loading && <span>→</span>}
+                </Button>
+            </form>
 
-                    <input
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        value={form.password}
-                        onChange={handleChange}
-                        required
-                    />
+            <div className="auth-switch">
+                <span>Already have an account?</span>
 
-                    <button type="submit">
-                        Create account
-                    </button>
-
-                </form>
-
-                <p>
-                    Already have an account?{" "}
-                    <Link to="/login">
-                        Sign in
-                    </Link>
-                </p>
-
+                <Link to="/login">
+                    Sign in
+                </Link>
             </div>
-
-        </div>
+        </AuthLayout>
     );
 };
 

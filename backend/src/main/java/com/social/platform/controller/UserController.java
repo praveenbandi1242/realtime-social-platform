@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,6 +31,26 @@ public class UserController {
                 userService.getCurrentUser(
                         authentication.getName()
                 )
+        );
+    }
+
+    /*
+     * Get another user's public profile.
+     *
+     * This endpoint is required by:
+     *
+     * GET /api/users/{id}
+     *
+     * The search page navigates to /users/{id}.
+     * Previously this endpoint did not exist, which caused
+     * the UserProfile page to show "Profile unavailable".
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                userService.getUserById(id)
         );
     }
 

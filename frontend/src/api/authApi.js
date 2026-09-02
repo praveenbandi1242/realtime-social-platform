@@ -1,17 +1,17 @@
 import api from "./axios";
 
 export const register = async (data) => {
-    const response = await api.post("/auth/register", data);
+    const response = await api.post("/api/auth/register", data);
     return response.data;
 };
 
 export const login = async (data) => {
-    const response = await api.post("/auth/login", data);
+    const response = await api.post("/api/auth/login", data);
     return response.data;
 };
 
 export const refreshToken = async (refreshToken) => {
-    const response = await api.post("/auth/refresh", {
+    const response = await api.post("/api/auth/refresh", {
         refreshToken,
     });
 
@@ -19,8 +19,7 @@ export const refreshToken = async (refreshToken) => {
 };
 
 export const logout = async (refreshToken) => {
-    await api.post("/auth/logout", {
+    await api.post("/api/auth/logout", {
         refreshToken,
     });
 };
-

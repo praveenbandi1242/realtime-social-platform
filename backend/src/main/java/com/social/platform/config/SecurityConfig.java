@@ -131,7 +131,7 @@ public class SecurityConfig {
                          * Public authentication endpoints.
                          */
                         .requestMatchers(
-                                "/api/auth/**"
+                                "/auth/**"
                         ).permitAll()
 
 
@@ -144,13 +144,7 @@ public class SecurityConfig {
 
 
                         /*
-                         * IMPORTANT:
-                         *
                          * Allow the WebSocket handshake.
-                         *
-                         * The actual JWT authentication happens
-                         * inside JwtStompInterceptor during STOMP
-                         * CONNECT.
                          */
                         .requestMatchers(
                                 "/ws",
@@ -172,7 +166,6 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 )
-
 
                 /*
                  * Authentication provider.

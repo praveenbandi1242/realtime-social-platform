@@ -9,6 +9,8 @@ import "../components/ui/Input.css";
 import "../components/ui/Button.css";
 import "./AuthPages.css";
 
+import { register } from "../api/authApi";
+
 const Register = () => {
     const navigate = useNavigate();
 
@@ -37,16 +39,9 @@ const Register = () => {
         setLoading(true);
 
         try {
-            /*
-             * Keep your existing register API implementation here.
-             *
-             * Example:
-             *
-             * await register(form);
-             *
-             * navigate("/");
-             */
+            await register(form);
 
+            navigate("/login");
         } catch (err) {
             setError(
                 err?.response?.data?.message ||
